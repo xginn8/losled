@@ -47,26 +47,27 @@ def new_rgb_image(width, height):
     return image
 
 ########### Main Program ###########
-
-if __name__ == "__main__":
-# Camera ID to read video from (numbered from 0)
-    camera_id = 0
-    dev = open_camera(camera_id) # open the camera as a video capture device
-
-    while True:
-        img_orig = get_frame(dev) # Get a frame from the camera
-        if img_orig is not None: # if we did get an image
-            image_thr = img_orig.copy()
-            gray = cv2.cvtColor(img_orig, cv2.COLOR_RGB2GRAY)
-            hsv = cv2.cvtColor(img_orig, cv2.COLOR_BGR2HSV)
-            image_thr[(hsv[...,1]<020) | (hsv[...,2]<200)]=0
-            (thresh, bwImg) = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY)
-            cv2.imshow("thres", image_thr)
-        else: 
-            break
+def capture(hue, threshold):
+    if __name__ == "__main__":
+    # Camera ID to read video from (numbered from 0)
+        camera_id = 0
+        dev = open_camera(camera_id) # open the camera as a video capture device
     
-        if (cv2.waitKey(2) >= 0): # If the user presses any key, exit the loop
-            break
+        while True:
+            img_orig = get_frame(dev) # Get a frame from the camera
+            if img_orig is not None: # if we did get an image
+                image_thr = img_orig.copy()
+                gray = cv2.cvtColor(img_orig, cv2.COLOR_RGB2GRAY)
+                hsv = cv2.cvtColor(img_orig, cv2.COLOR_BGR2HSV)
+                image_thr[(hsv[...,1]<hue) | (hsv[...,2]<threshold)]=0
+                (thresh, bwImg) = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY)
+                cv2.imshow("thres", image_thr)
+            else: 
+                break
         
-    cleanup(camera_id) # close video device and windows before we exit
+            if (cv2.waitKey(2) >= 0): # If the user presses any key, exit the loop
+                break
+            
+        cleanup(camera_id) # close video device and windows before we exit
 
+capture(010, 220)
