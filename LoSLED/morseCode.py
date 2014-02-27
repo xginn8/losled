@@ -1,16 +1,13 @@
+
 from arduino import Arduino
 import time
 
 ###################
 ## CONFIG
 
-timeStep = .01
-dot = 1
-dash = 3
-space = 7
+#pin = int(initializeSession[0])
 
 #b = Arduino('/dev/ttyACM2')
-pin = 9
 # declare output pins as a list/tuple
 #b.output([pin])
 ###################
@@ -58,16 +55,22 @@ morseCode['0'] = [1,1,1,1,1]
 morseCode[' '] = [7]
 ###################
 
+
+# assert ints
+# try/except
 def initializeSession():
     print "Initializing session.."
-    pin = raw_input("Pin (default 9):")
+    pin = raw_input("Pin (default 9): ")
     timeStep = raw_input("Timestep (default .1): ")
     dotLength = raw_input("Dot length (default 1): ")
     dashLength = raw_input("Dash length (default 3): ")
     spaceLength = raw_input("Space length (default 7):  ")
+    print "Good to go."
+    return pin, timeStep, dotLength, dashLength, spaceLength
 
 def getMessageFromUser():
     # UI portion
+    # try/except clause
     msgOrig = raw_input("~>: ")
     msg = msgOrig.strip()
     msg = msg.strip()
@@ -84,7 +87,8 @@ def checkMessage():
             break
     return msg, msgLength, msgOrig
 
-def transmit(timeStep):
+def transmit():
+    (pin, timeStep, dotLength, dashLength, spaceLength) = initializeSession()
     (msg, msgLength, msgOrig) = checkMessage() 
     timeStart = time.time()
     for char in xrange(msgLength):
@@ -108,5 +112,5 @@ def transmit(timeStep):
     transmit(timeStep)
     b.close()
 
-#transmit(timeStep)
+#transmit()
 initializeSession()
