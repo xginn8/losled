@@ -6,10 +6,11 @@ import time
 ## CONFIG
 
 #pin = int(initializeSession[0])
+pin = 13 
 
-#b = Arduino('/dev/ttyACM2')
+b = Arduino('/dev/ttyACM0')
 # declare output pins as a list/tuple
-#b.output([pin])
+b.output([pin])
 ###################
 ### MORSE CODE MAPPINGS ###
 ## CAN CONVERT THIS \/ \/ \/ INTO BIN, STORE AS INT INSTEAD OF LIST
@@ -60,11 +61,16 @@ morseCode[' '] = [7]
 # try/except
 def initializeSession():
     print "Initializing session.."
-    pin = raw_input("Pin (default 9): ")
-    timeStep = raw_input("Timestep (default .1): ")
-    dotLength = raw_input("Dot length (default 1): ")
-    dashLength = raw_input("Dash length (default 3): ")
-    spaceLength = raw_input("Space length (default 7):  ")
+#    pin = raw_input("Pin (default 9): ")
+#    timeStep = raw_input("Timestep (default .1): ")
+#    dotLength = raw_input("Dot length (default 1): ")
+#    dashLength = raw_input("Dash length (default 3): ")
+#    spaceLength = raw_input("Space length (default 7):  ")
+    pin = 13
+    timeStep = .1 
+    dotLength = 1 
+    dashLength = 3 
+    spaceLength = 7 
     print "Good to go."
     return pin, timeStep, dotLength, dashLength, spaceLength
 
@@ -73,7 +79,6 @@ def getMessageFromUser():
     # try/except clause
     msgOrig = raw_input("~>: ")
     msg = msgOrig.strip()
-    msg = msg.strip()
     msg = list(msg.lower())
     msgLength = len(msg)
     return msg, msgLength, msgOrig
@@ -87,30 +92,41 @@ def checkMessage():
             break
     return msg, msgLength, msgOrig
 
-def transmit():
-    (pin, timeStep, dotLength, dashLength, spaceLength) = initializeSession()
+def encode(spaceLength):
     (msg, msgLength, msgOrig) = checkMessage() 
-    timeStart = time.time()
+    msgLength = len(msg)
+    encodedMsg =  [] 
+    charList = []
     for char in xrange(msgLength):
-        charList = morseCode[msg[char]]
-        for letter in xrange(len(charList)):
-            if(charList[letter] == space):
-                b.setLow(pin)
-                time.sleep(timeStep * space)
-            if(charList[letter] == 0):
-                b.setHigh(pin)
-                time.sleep(timeStep * dot)
-                b.setLow(pin)
-                time.sleep(timeStep * dash)
-            if(charList[letter] == 1):
-                b.setHigh(pin)
-                time.sleep(timeStep * dash)
-                b.setLow(pin)
-                time.sleep(timeStep * dash)
+        charList += [morseCode[msg[char]]]
+    for row in xrange(len(charList)):
+        for col in xrange(len(charList[row])):
+            encodedMsg.append(charList[row][col])
+    return encodedMsg, msgOrig
+
+def transmit():
+    (pin, timeStep, dot, dash, space) = initializeSession()
+    (charList, msgOrig) = encode(space) 
+    timeStart = time.time()
+    for letter in xrange(len(charList)):
+        if(charList[letter] == space):
+            b.setLow(pin)
+            time.sleep(timeStep * space)
+        if(charList[letter] == 0):
+            b.setHigh(pin)
+            time.sleep(timeStep * dot)
+            b.setLow(pin)
+            time.sleep(timeStep * dash)
+        if(charList[letter] == 1):
+            b.setHigh(pin)
+            time.sleep(timeStep * dash)
+            b.setLow(pin)
+            time.sleep(timeStep * dash)
     timeEnd = time.time()
     print 'Tx:', msgOrig, "in:", float(timeEnd - timeStart), "s"
-    transmit(timeStep)
+    transmit()
     b.close()
 
-#transmit()
-initializeSession()
+
+transmit()
+#initializeSession()

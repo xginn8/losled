@@ -1,0 +1,17 @@
+
+##############################################################################
+##############################################################################
+############################ LoSLED Change Log ###############################
+##############################################################################
+
+28/2 	
+-- dot space (no signal * 1) between bits of each letter
+-- dash space (no signal * 3) between letters
+-- space (no signal * 7) between words
+-- Tx is fine (think so at least) 
+-- (Recognition component) of Rx needs to account for this
+-- This might indicate the need for asymmetrical Tx/Rx protocols 
+
+
+############################ END END END END END #############################
+##############################################################################
