@@ -1,4 +1,10 @@
 
+
+##################
+## rxConvert.py ##
+##################
+
+
 morseCode = dict()
 morseCode['a'] = [0,1]
 morseCode['b'] = [1,0,0,0]
@@ -53,10 +59,9 @@ def reverseDict(code):
 def letterizeMsgIn(msgIn, morseCode):
     letterized = []
     while(len(msgIn) > 0):
-        letterized.append(msgIn[:msgIn.index(7)])
+        letterized.append(msgIn[:msgIn.index(3)])
         for i in xrange(msgIn.index(3)):
             msgIn.pop(0)
-#        letterized.append([7])
         msgIn.pop(0)
     return letterized
 
@@ -69,4 +74,4 @@ def decode(msgIn, morseCode):
 
 
 decode([0, 0, 0, 0, 3, 0, 3, 0, 1, 0, 0, 3, 0, 1, 0, 0, 3, 1, 1, 1, 3], morseCode)
-
+decode([0, 3, 7, 3, 1, 0, 3, 0, 1, 0, 0, 3, 0, 1, 0, 0, 3, 1, 1, 1, 3], morseCode)

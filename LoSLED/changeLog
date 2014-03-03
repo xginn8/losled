@@ -12,6 +12,13 @@
 -- (Recognition component) of Rx needs to account for this
 -- This might indicate the need for asymmetrical Tx/Rx protocols 
 
+3/3
+-- removed old files
+-- fixed rxConvert
+-- current files:
+	morseCode.py
+	rxConvert.py
+	filterColor.py
 
 ############################ END END END END END #############################
 ##############################################################################
